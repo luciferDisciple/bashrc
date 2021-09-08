@@ -70,9 +70,9 @@ if ${use_color} ; then
 	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
+		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W '${git_info_color}'\[\033[01;31m\]]\$\[\033[00m\] '
 	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
+		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W '${git_info_color}'\[\033[01;32m\]]\$\[\033[00m\] '
 	fi
 
 	alias ls='ls --color=auto'
@@ -138,4 +138,39 @@ ex ()
   fi
 }
 
+alias e=nvim
+alias vim=nvim
 alias ll='ls -l --group-directories-first'
+alias to-utf-8='iconv -f CP1250 -t UTF8'
+
+EDITOR=nvim
+GIT_EDITOR=nvim
+
+BC_ENV_ARGS=~/.bc
+export BC_ENV_ARGS
+
+function yt2mp3 () {
+	youtube-dl -f bestaudio --extract-audio --audio-format mp3 \
+		-o "$1.%(ext)s" $2
+}
+
+bitrate ()
+{
+	local file="$1"
+	echo "$file"
+	_song_bitrate "$file"
+	shift
+	while [[ -n "$1" ]]; do
+		local file="$1"
+		printf "\n$file\n"
+		_song_bitrate "$file"
+		shift
+	done
+}
+
+_song_bitrate ()
+{
+	ffmpeg -hide_banner -i "$1" 2>&1 |
+		grep --colour=never 'bitrate: [0-9]\+ kb/s' |
+		sed -E 's/, start: 0.000000//; s/^\W+//'
+}
