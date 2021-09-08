@@ -59,6 +59,39 @@ match_lhs=""
 	&& match_lhs=$(dircolors --print-database)
 [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
 
+# ANSI Escape Sequences
+
+ANSI_RESET='\033[00m'
+BOLD='\033[01m'
+ITALIC='\033[03m'
+UNDERLINE='\033[04m'
+
+RED='\033[31m'    ; ON_RED='\033[41m'
+GREEN='\033[32m'  ; ON_GREEN='\033[42m'
+YELLOW='\033[33m' ; ON_YELLOW='\033[43m'
+BLUE='\033[34m'   ; ON_BLUE='\033[44m'
+PINK='\033[35m'   ; ON_PINK='\033[45m'
+CYAN='\033[36m'   ; ON_CYAN='\033[46m'
+
+# The following print the same:
+# echo -e "${UNDERLINE}${RED}warning!${ANSI_RESET}"
+# echo -e "\e[04m\e[31mwarning!\e[00m'
+# echo -e "\e[04;31mwarning!\e[00m'
+# echo -e "\033[04;31mwarning!\033[00m'
+# echo $'\033[04;31mwarning!\033[00m'
+# 033 == 27 == 0x1B == ASCII("ESCAPE")
+
+# If git is istalled and working directory is inside of git repository, show
+# repository info at the command line prompt
+
+GIT_PROMPT_SCRIPT=/usr/share/git/completion/git-prompt.sh
+[[ -f "$GIT_PROMPT_SCRIPT" ]] && git_available=true
+if ${git_available} ; then
+	source "$GIT_PROMPT_SCRIPT"
+	git_info_mono='$(__git_ps1 "(%s)")'
+	git_info_color=${BOLD}${RED}${git_info_mono}${ANSI_RESET}
+fi
+
 if ${use_color} ; then
 	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 	if type -P dircolors >/dev/null ; then
@@ -89,6 +122,7 @@ else
 fi
 
 unset use_color safe_term match_lhs sh
+unset git_available GIT_PROMPT_SCRIPT
 
 alias cp="cp -i"                          # confirm before overwriting something
 alias df='df -h'                          # human-readable sizes
@@ -154,8 +188,8 @@ function yt2mp3 () {
 		-o "$1.%(ext)s" $2
 }
 
-bitrate ()
-{
+bitrate () 
+{ 
 	local file="$1"
 	echo "$file"
 	_song_bitrate "$file"
@@ -174,3 +208,5 @@ _song_bitrate ()
 		grep --colour=never 'bitrate: [0-9]\+ kb/s' |
 		sed -E 's/, start: 0.000000//; s/^\W+//'
 }
+
+export PATH="$HOME/.symfony/bin:$PATH"
