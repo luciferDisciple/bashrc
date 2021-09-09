@@ -89,7 +89,10 @@ GIT_PROMPT_SCRIPT=/usr/share/git/completion/git-prompt.sh
 if ${git_available} ; then
 	source "$GIT_PROMPT_SCRIPT"
 	git_info_mono='$(__git_ps1 "(%s)")'
-	git_info_color=${BOLD}${RED}${git_info_mono}${ANSI_RESET}
+	git_info_color='\['${BOLD}${RED}'\]'${git_info_mono}'\['${ANSI_RESET}'\]'
+	# CAUTION: ANSI Control Squences in PS1 must be surrounded with
+	#          '\[' and '\]'
+	#          see: section PROMPTING in bash(1) manpage
 fi
 
 if ${use_color} ; then
