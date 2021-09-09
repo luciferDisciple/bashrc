@@ -88,7 +88,7 @@ GIT_PROMPT_SCRIPT=/usr/share/git/completion/git-prompt.sh
 [[ -f "$GIT_PROMPT_SCRIPT" ]] && git_available=true
 if ${git_available} ; then
 	source "$GIT_PROMPT_SCRIPT"
-	git_info_mono='$(__git_ps1 "(%s)")'
+	git_info_mono='$(__git_ps1 " (%s)")'
 	git_info_color='\['${BOLD}${RED}'\]'${git_info_mono}'\['${ANSI_RESET}'\]'
 	# CAUTION: ANSI Control Squences in PS1 must be surrounded with
 	#          '\[' and '\]'
@@ -106,9 +106,9 @@ if ${use_color} ; then
 	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W '${git_info_color}'\[\033[01;31m\]]\$\[\033[00m\] '
+		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W'${git_info_color}'\[\033[01;31m\]]\$\[\033[00m\] '
 	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W '${git_info_color}'\[\033[01;32m\]]\$\[\033[00m\] '
+		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W'${git_info_color}'\[\033[01;32m\]]\$\[\033[00m\] '
 	fi
 
 	alias ls='ls --color=auto'
