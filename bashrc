@@ -81,6 +81,49 @@ CYAN='\033[36m'   ; ON_CYAN='\033[46m'
 # echo $'\033[04;31mwarning!\033[00m'
 # 033 == 27 == 0x1B == ASCII("ESCAPE")
 
+bold () {
+	local text
+	if [[ $# -eq 0 ]]; then
+		IFS= read -d '' -r text
+	else
+		text="$@"
+	fi
+	echo -ne "${BOLD}${text}${ANSI_RESET}"
+}
+
+underline () {
+	local text
+	if [[ $# -eq 0 ]]; then
+		IFS= read -d '' -r text
+		# read stdin if no args ('IFS=' keeps whitespace)
+	else
+		text="$@"
+	fi
+	echo -ne "${UNDERLINE}${text}${ANSI_RESET}"
+}
+
+italics () {
+	local text
+	if [[ $# -eq 0 ]]; then
+		IFS= read -d '' -r text
+	else
+		text="$@"
+	fi
+	echo -ne "${ITALIC}${text}${ANSI_RESET}"
+}
+
+center () {
+	local text
+	if [[ $# -eq 0 ]]; then
+		IFS= read -d '' -r text
+	else
+		text="$@"
+	fi
+	local screen_width=${COLUMNS:-80}
+	local lpadding=$[($screen_width - ${#text})/2]
+	printf '%*s' $[$lpadding + ${#text}] "$text"
+}
+
 # If git is istalled and working directory is inside of git repository, show
 # repository info at the command line prompt
 
@@ -210,6 +253,85 @@ _song_bitrate ()
 	ffmpeg -hide_banner -i "$1" 2>&1 |
 		grep --colour=never 'bitrate: [0-9]\+ kb/s' |
 		sed -E 's/, start: 0.000000//; s/^\W+//'
+}
+
+shortcuts () {
+
+	local shortcuts_doc
+IFS= read -d '' shortcuts_doc <<EOF
+
+
+`center  'BASH SHORTCUTS | LINE EDITING COMMANDS' | bold`
+
+`italics NOTATION`:
+C-x means CTRL+X
+M-x means ALT+X or ESC and then X
+
+`underline shell-expand-line` (M-C-e)
+(That's why bash is great) Perform expansions on the current line without
+executing the command, meaning for example, all variable references are
+substituted for the values these variables store.
+
+`underline clear-screen` (C-l)
+Clear the screen leaving the current line at the top of the screen. With an
+argument, refresh the current line without clearing the screen.
+
+`underline beginning-of-line` (C-a)
+Move to the start of the current line.
+
+`underline end-of-line` (C-e)
+Move to the end of the line.
+
+`underline forward-word` (M-f)
+Move forward to the end of the next word.  Words are composed of alphanumeric
+characters (letters and digits).
+
+`underline backward-word` (M-b)
+Move  back  to the start of the current or previous word.  Words are composed
+of alphanumeric characters (letters and digits).
+
+`underline digit-argument` (M-0, M-1, ..., M--)
+Add this digit to the argument already accumulating, or start a new argument.
+M-- starts a negative argument.
+
+`underline undo` (C-_, C-x C-u)
+Incremental undo, separately remembered for each line.
+
+`underline revert-line` (M-r)
+Reset a line from the history, i.e. discard all edits you have made.
+
+`underline kill-line` (C-k)
+Remove all characters from the cursor to the end of line. Removed characters
+are stored in kill ring (clipboard).
+
+`underline unix-line-discard` (C-u)
+Remove all characters form the beginning of the line to the end of the line.
+Removed characters are stored in kill ring (clipboard).
+
+`underline yank` (C-y)
+Paste (yank) the content of the clipboard (kill-ring).
+
+`underline abort` (C-g)
+Use it to cancel `underline reverse-history-search` command.
+
+`underline end-of-history` (M->)
+Jump to the last line in the history, i.e. edit the newest, current command.
+CTRL+SHIFT+.
+
+`underline insert-last-argument` (M-.)
+Insert the last command line argument (word) used. Executing multiple times
+fetches words from further back in history.
+
+`underline transpose-words` (M-t)
+Swap last two words of the current line.
+
+`underline edit-and-execute-command` (C-xC-e)
+Invoke an editor on the current command line, and execute the result as shell
+commands. Bash attempts to invoke \$VISUAL, \$EDITOR, and emacs as the editor,
+in that order.
+EOF
+
+	echo "$shortcuts_doc" | less --raw-control-chars
 }
 
 export PATH="$HOME/.symfony/bin:$PATH"
