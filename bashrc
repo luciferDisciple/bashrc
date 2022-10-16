@@ -138,10 +138,20 @@ fi
 # If git is istalled and working directory is inside of git repository, show
 # repository info at the command line prompt
 
-GIT_PROMPT_SCRIPT=/usr/share/git/completion/git-prompt.sh
-[[ -f "$GIT_PROMPT_SCRIPT" ]] && git_available=true
-if ${git_available} ; then
-	source "$GIT_PROMPT_SCRIPT"
+__git_ps1_available=false
+git_ps1_sources=(
+	/usr/share/git/completion/git-prompt.sh
+	/usr/share/bash-completion/bash_completion
+	/etc/bash_completion
+)
+for file in "${git_ps1_sources[@]}"; do
+	if [[ -r "$file" ]]; then
+		source "$file"
+		__git_ps1_available=true
+		break
+	fi
+done
+if $__git_ps1_available; then
 	git_info_mono='$(__git_ps1 " (%s)")'
 	git_info_color='\['${BOLD}${RED}'\]'${git_info_mono}'\['${ANSI_RESET}'\]'
 	# CAUTION: ANSI Control Squences in PS1 must be surrounded with
@@ -179,7 +189,7 @@ else
 fi
 
 unset use_color safe_term match_lhs sh
-unset git_available GIT_PROMPT_SCRIPT
+unset __git_ps1_available GIT_PROMPT_SCRIPT
 
 alias cp="cp -i"                          # confirm before overwriting something
 alias df='df -h'                          # human-readable sizes
