@@ -355,9 +355,11 @@ EOF
 	echo "$shortcuts_doc" | less --raw-control-chars
 }
 
-# These entries will be repeated in subshells :(
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.symfony/bin:$PATH"
+if [[ -z "$is_path_set" ]]; then
+	export PATH="$HOME/.local/bin:$PATH"
+	export PATH="$HOME/.symfony/bin:$PATH"
+	export is_path_set=true
+fi
 
 export EDITOR=nvim
 alias e="$EDITOR"
