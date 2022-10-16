@@ -355,4 +355,33 @@ EOF
 	echo "$shortcuts_doc" | less --raw-control-chars
 }
 
+# These entries will be repeated in subshells :(
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.symfony/bin:$PATH"
+
+export EDITOR=nvim
+alias e="$EDITOR"
+alias vim="nvim"
+
+is_func_declared ()
+{
+	case "$1" in
+		-h|--help)
+			echo 'usage: is_func_declared NAME'
+			echo '       is_func_declared -h|--help'
+			echo 'Test if function NAME is defined.'
+			return 2;;
+		-*)
+			echo is_func_declared: unknown option: $1
+			return 3;;
+		*)
+			local name="$1"
+			test $(declare -F "$name") = "$name"
+			return;;
+	esac
+}
+
+print_path ()
+{
+	echo "$PATH" | sed 's/:/\n/g'
+}
