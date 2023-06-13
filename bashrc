@@ -4,6 +4,32 @@
 
 [[ $- != *i* ]] && return
 
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+export BC_ENV_ARGS="$HOME/.bc"
+export EDITOR=nvim
+export GEM_HOME="$XDG_DATA_HOME/gem"
+export GIT_EDITOR=nvim
+
+alias cp="cp -i"                          # confirm before overwriting something
+alias df='df -h'                          # human-readable sizes
+alias e="$EDITOR"
+alias free='free -m'                      # show sizes in MB
+alias more=less
+alias np='nano -w PKGBUILD'
+alias vim="nvim"
+
+is_path_set=${is_path_set:-false}
+if ! $is_path_set; then
+	export PATH="$HOME/.local/bin:$PATH"
+	export PATH="$HOME/.symfony/bin:$PATH"
+	export PATH="$GEM_HOME/bin:$PATH"
+	export is_path_set=true
+fi
+
 colors() {
 	local fgc bgc vals seq0
 
@@ -191,12 +217,6 @@ fi
 unset use_color safe_term match_lhs sh
 unset __git_ps1_available GIT_PROMPT_SCRIPT
 
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
-alias np='nano -w PKGBUILD'
-alias more=less
-
 xhost +local:root > /dev/null 2>&1
 
 complete -cf sudo
@@ -239,16 +259,8 @@ ex ()
   fi
 }
 
-alias e=nvim
-alias vim=nvim
 alias ll='ls -l --group-directories-first'
 alias to-utf-8='iconv -f CP1250 -t UTF8'
-
-EDITOR=nvim
-GIT_EDITOR=nvim
-
-BC_ENV_ARGS=~/.bc
-export BC_ENV_ARGS
 
 function yt2mp3 () {
 	youtube-dl -f bestaudio --extract-audio --audio-format mp3 \
@@ -354,16 +366,6 @@ EOF
 
 	echo "$shortcuts_doc" | less --raw-control-chars
 }
-
-if [[ -z "$is_path_set" ]]; then
-	export PATH="$HOME/.local/bin:$PATH"
-	export PATH="$HOME/.symfony/bin:$PATH"
-	export is_path_set=true
-fi
-
-export EDITOR=nvim
-alias e="$EDITOR"
-alias vim="nvim"
 
 is_func_declared ()
 {
