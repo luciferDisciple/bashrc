@@ -11,7 +11,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 export BC_ENV_ARGS="$HOME/.bc"
 export EDITOR=nvim
-export GEM_HOME="$XDG_DATA_HOME/gem"
+export GEM_HOME="$(ruby -e 'puts Gem.user_dir' || "")"
 export GIT_EDITOR=nvim
 
 alias cp="cp -i"                          # confirm before overwriting something
