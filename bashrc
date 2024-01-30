@@ -371,9 +371,15 @@ is_func_declared ()
 {
 	case "$1" in
 		-h|--help)
-			echo 'usage: is_func_declared NAME'
-			echo '       is_func_declared -h|--help'
+			echo 'usage: is_func_declared [-h|--help] NAME'
+			echo ''
 			echo 'Test if function NAME is defined.'
+			echo ''
+			echo 'optional arguments:'
+			echo '  -h, --help     show this help and exit'
+			echo ''
+			echo 'positional arguments:'
+			echo '  NAME    name of a bash function'
 			return 2;;
 		-*)
 			echo is_func_declared: unknown option: $1
@@ -385,7 +391,40 @@ is_func_declared ()
 	esac
 }
 
-print_path ()
+path_pretty ()
 {
+	case "$1" in
+		-h|--help)
+			echo 'usage: path_pretty [-h|--help]'
+			echo ''
+			echo 'Print the value of PATH environment variable, but with each directory on'
+			echo 'a separate line.'
+			echo ''
+			echo 'optional arguments:'
+			echo '  -h, --help     show this help and exit'
+			return 2;;
+	esac
 	echo "$PATH" | sed 's/:/\n/g'
 }
+
+cdwin ()
+{
+	case "$1" in
+		-h|--help)
+			echo 'usage: cdwin [-h|--help] WINPATH'
+			echo ''
+			echo 'Assuming you run Windows Subsystem for Linux, change current directory'
+			echo 'to a directory where a Windows folder specified by WINPATH is mounted at'
+			echo ''
+			echo 'positional arguments:'
+			echo '  WINPATH    path of a Windows folder, eg. C:\Users\adam\Desktop'
+			echo ''
+			echo 'optional arguments:'
+			echo '  -h, --help     show this help and exit'
+			return 2;;
+	esac
+	local win_path="$1"
+	local unix_path=$(sed -e 's:\\:/:g' -e "s/^\([A-z]\):/\L\1/" -e "s:^:\/mnt/:" <<< "$1")
+	cd "$unix_path"
+}
+
