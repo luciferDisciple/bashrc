@@ -414,17 +414,21 @@ cdwin ()
 			echo 'usage: cdwin [-h|--help] WINPATH'
 			echo ''
 			echo 'Assuming you run Windows Subsystem for Linux, change current directory'
-			echo 'to a directory where a Windows folder specified by WINPATH is mounted at'
+			echo 'to a directory where a Windows folder specified by WINPATH is mounted at.'
 			echo ''
 			echo 'positional arguments:'
-			echo '  WINPATH    path of a Windows folder, eg. C:\Users\adam\Desktop'
+			echo "  WINPATH    path of a Windows folder, eg. 'C:\Users\adam\Desktop'"
+			echo '             Enclose it within single quotes. To learn why, execute:'
+			echo '             echo C:\I\dont\quote\properly'
 			echo ''
 			echo 'optional arguments:'
 			echo '  -h, --help     show this help and exit'
 			return 2;;
 	esac
 	local win_path="$1"
-	local unix_path=$(sed -e 's:\\:/:g' -e "s/^\([A-z]\):/\L\1/" -e "s:^:\/mnt/:" <<< "$1")
-	cd "$unix_path"
+	local unix_path=$(sed -e 's:\\:/:g' -e "s/^\([A-z]\):/\L\1/" -e "s:^:/mnt/:" <<< "$1")
+	cd "$unix_path" \
+		|| echo '[cdwin] Could not go to requested folder.' \
+		        'Did you remember to enclose WINPATH in single quotes?'
 }
 
