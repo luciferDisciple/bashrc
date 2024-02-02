@@ -24,49 +24,49 @@ alias vim="nvim"
 
 is_path_set=${is_path_set:-false}
 if ! $is_path_set; then
-	export PATH="$HOME/.local/bin:$PATH"
-	export PATH="$HOME/.symfony/bin:$PATH"
-	export PATH="$GEM_HOME/bin:$PATH"
-	export is_path_set=true
+  export PATH="$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.symfony/bin:$PATH"
+  export PATH="$GEM_HOME/bin:$PATH"
+  export is_path_set=true
 fi
 
 colors() {
-	local fgc bgc vals seq0
+  local fgc bgc vals seq0
 
-	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
-	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
-	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
-	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+  printf "Color escapes are %s\n" '\e[${value};...;${value}m'
+  printf "Values 30..37 are \e[33mforeground colors\e[m\n"
+  printf "Values 40..47 are \e[43mbackground colors\e[m\n"
+  printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
 
-	# foreground colors
-	for fgc in {30..37}; do
-		# background colors
-		for bgc in {40..47}; do
-			fgc=${fgc#37} # white
-			bgc=${bgc#40} # black
+  # foreground colors
+  for fgc in {30..37}; do
+    # background colors
+    for bgc in {40..47}; do
+      fgc=${fgc#37} # white
+      bgc=${bgc#40} # black
 
-			vals="${fgc:+$fgc;}${bgc}"
-			vals=${vals%%;}
+      vals="${fgc:+$fgc;}${bgc}"
+      vals=${vals%%;}
 
-			seq0="${vals:+\e[${vals}m}"
-			printf "  %-9s" "${seq0:-(default)}"
-			printf " ${seq0}TEXT\e[m"
-			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
-		done
-		echo; echo
-	done
+      seq0="${vals:+\e[${vals}m}"
+      printf "  %-9s" "${seq0:-(default)}"
+      printf " ${seq0}TEXT\e[m"
+      printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
+    done
+    echo; echo
+  done
 }
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 # Change the window title of X terminals
 case ${TERM} in
-	xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
-		;;
-	screen*)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
-		;;
+  xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
+    PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
+    ;;
+  screen*)
+    PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
+    ;;
 esac
 
 use_color=true
@@ -81,8 +81,8 @@ match_lhs=""
 [[ -f ~/.dir_colors   ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
 [[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
 [[ -z ${match_lhs}    ]] \
-	&& type -P dircolors >/dev/null \
-	&& match_lhs=$(dircolors --print-database)
+  && type -P dircolors >/dev/null \
+  && match_lhs=$(dircolors --print-database)
 [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
 
 # ANSI Escape Sequences
@@ -108,46 +108,46 @@ CYAN='\033[36m'   ; ON_CYAN='\033[46m'
 # 033 == 27 == 0x1B == ASCII("ESCAPE")
 
 bold () {
-	local text
-	if [[ $# -eq 0 ]]; then
-		IFS= read -d '' -r text
-	else
-		text="$@"
-	fi
-	echo -ne "${BOLD}${text}${ANSI_RESET}"
+  local text
+  if [[ $# -eq 0 ]]; then
+    IFS= read -d '' -r text
+  else
+    text="$@"
+  fi
+  echo -ne "${BOLD}${text}${ANSI_RESET}"
 }
 
 underline () {
-	local text
-	if [[ $# -eq 0 ]]; then
-		IFS= read -d '' -r text
-		# read stdin if no args ('IFS=' keeps whitespace)
-	else
-		text="$@"
-	fi
-	echo -ne "${UNDERLINE}${text}${ANSI_RESET}"
+  local text
+  if [[ $# -eq 0 ]]; then
+    IFS= read -d '' -r text
+    # read stdin if no args ('IFS=' keeps whitespace)
+  else
+    text="$@"
+  fi
+  echo -ne "${UNDERLINE}${text}${ANSI_RESET}"
 }
 
 italics () {
-	local text
-	if [[ $# -eq 0 ]]; then
-		IFS= read -d '' -r text
-	else
-		text="$@"
-	fi
-	echo -ne "${ITALIC}${text}${ANSI_RESET}"
+  local text
+  if [[ $# -eq 0 ]]; then
+    IFS= read -d '' -r text
+  else
+    text="$@"
+  fi
+  echo -ne "${ITALIC}${text}${ANSI_RESET}"
 }
 
 center () {
-	local text
-	if [[ $# -eq 0 ]]; then
-		IFS= read -d '' -r text
-	else
-		text="$@"
-	fi
-	local screen_width=${COLUMNS:-80}
-	local lpadding=$[($screen_width - ${#text})/2]
-	printf '%*s' $[$lpadding + ${#text}] "$text"
+  local text
+  if [[ $# -eq 0 ]]; then
+    IFS= read -d '' -r text
+  else
+    text="$@"
+  fi
+  local screen_width=${COLUMNS:-80}
+  local lpadding=$[($screen_width - ${#text})/2]
+  printf '%*s' $[$lpadding + ${#text}] "$text"
 }
 
 # enable programmable completion features (you don't need to enable
@@ -166,52 +166,52 @@ fi
 
 __git_ps1_available=false
 git_ps1_sources=(
-	/usr/share/git/completion/git-prompt.sh
-	/usr/share/bash-completion/bash_completion
-	/etc/bash_completion
+  /usr/share/git/completion/git-prompt.sh
+  /usr/share/bash-completion/bash_completion
+  /etc/bash_completion
 )
 for file in "${git_ps1_sources[@]}"; do
-	if [[ -r "$file" ]]; then
-		source "$file"
-		__git_ps1_available=true
-		break
-	fi
+  if [[ -r "$file" ]]; then
+    source "$file"
+    __git_ps1_available=true
+    break
+  fi
 done
 if $__git_ps1_available; then
-	git_info_mono='$(__git_ps1 " (%s)")'
-	git_info_color='\['${BOLD}${RED}'\]'${git_info_mono}'\['${ANSI_RESET}'\]'
-	# CAUTION: ANSI Control Squences in PS1 must be surrounded with
-	#          '\[' and '\]'
-	#          see: section PROMPTING in bash(1) manpage
+  git_info_mono='$(__git_ps1 " (%s)")'
+  git_info_color='\['${BOLD}${RED}'\]'${git_info_mono}'\['${ANSI_RESET}'\]'
+  # CAUTION: ANSI Control Squences in PS1 must be surrounded with
+  #          '\[' and '\]'
+  #          see: section PROMPTING in bash(1) manpage
 fi
 
 if ${use_color} ; then
-	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-	if type -P dircolors >/dev/null ; then
-		if [[ -f ~/.dir_colors ]] ; then
-			eval $(dircolors -b ~/.dir_colors)
-		elif [[ -f /etc/DIR_COLORS ]] ; then
-			eval $(dircolors -b /etc/DIR_COLORS)
-		fi
-	fi
+  # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
+  if type -P dircolors >/dev/null ; then
+    if [[ -f ~/.dir_colors ]] ; then
+      eval $(dircolors -b ~/.dir_colors)
+    elif [[ -f /etc/DIR_COLORS ]] ; then
+      eval $(dircolors -b /etc/DIR_COLORS)
+    fi
+  fi
 
-	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W'${git_info_color}'\[\033[01;31m\]]\$\[\033[00m\] '
-	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W'${git_info_color}'\[\033[01;32m\]]\$\[\033[00m\] '
-	fi
+  if [[ ${EUID} == 0 ]] ; then
+    PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W'${git_info_color}'\[\033[01;31m\]]\$\[\033[00m\] '
+  else
+    PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W'${git_info_color}'\[\033[01;32m\]]\$\[\033[00m\] '
+  fi
 
-	alias ls='ls --color=auto'
-	alias grep='grep --colour=auto'
-	alias egrep='egrep --colour=auto'
-	alias fgrep='fgrep --colour=auto'
+  alias ls='ls --color=auto'
+  alias grep='grep --colour=auto'
+  alias egrep='egrep --colour=auto'
+  alias fgrep='fgrep --colour=auto'
 else
-	if [[ ${EUID} == 0 ]] ; then
-		# show root@ when we don't have colors
-		PS1='\u@\h \W '${git_info_mono}'\$ '
-	else
-		PS1='\u@\h \w '${git_info_mono}'\$ '
-	fi
+  if [[ ${EUID} == 0 ]] ; then
+    # show root@ when we don't have colors
+    PS1='\u@\h \W '${git_info_mono}'\$ '
+  else
+    PS1='\u@\h \w '${git_info_mono}'\$ '
+  fi
 fi
 
 unset use_color safe_term match_lhs sh
@@ -263,34 +263,34 @@ alias ll='ls -l --group-directories-first'
 alias to-utf-8='iconv -f CP1250 -t UTF8'
 
 function yt2mp3 () {
-	youtube-dl -f bestaudio --extract-audio --audio-format mp3 \
-		-o "$1.%(ext)s" $2
+  youtube-dl -f bestaudio --extract-audio --audio-format mp3 \
+    -o "$1.%(ext)s" $2
 }
 
 bitrate () 
 { 
-	local file="$1"
-	echo "$file"
-	_song_bitrate "$file"
-	shift
-	while [[ -n "$1" ]]; do
-		local file="$1"
-		printf "\n$file\n"
-		_song_bitrate "$file"
-		shift
-	done
+  local file="$1"
+  echo "$file"
+  _song_bitrate "$file"
+  shift
+  while [[ -n "$1" ]]; do
+    local file="$1"
+    printf "\n$file\n"
+    _song_bitrate "$file"
+    shift
+  done
 }
 
 _song_bitrate ()
 {
-	ffmpeg -hide_banner -i "$1" 2>&1 |
-		grep --colour=never 'bitrate: [0-9]\+ kb/s' |
-		sed -E 's/, start: 0.000000//; s/^\W+//'
+  ffmpeg -hide_banner -i "$1" 2>&1 |
+    grep --colour=never 'bitrate: [0-9]\+ kb/s' |
+    sed -E 's/, start: 0.000000//; s/^\W+//'
 }
 
 shortcuts () {
 
-	local shortcuts_doc
+  local shortcuts_doc
 IFS= read -d '' shortcuts_doc <<EOF
 
 
@@ -364,71 +364,71 @@ commands. Bash attempts to invoke \$VISUAL, \$EDITOR, and emacs as the editor,
 in that order.
 EOF
 
-	echo "$shortcuts_doc" | less --raw-control-chars
+  echo "$shortcuts_doc" | less --raw-control-chars
 }
 
 is_func_declared ()
 {
-	case "$1" in
-		-h|--help)
-			echo 'usage: is_func_declared [-h|--help] NAME'
-			echo ''
-			echo 'Test if function NAME is defined.'
-			echo ''
-			echo 'optional arguments:'
-			echo '  -h, --help     show this help and exit'
-			echo ''
-			echo 'positional arguments:'
-			echo '  NAME    name of a bash function'
-			return 2;;
-		-*)
-			echo is_func_declared: unknown option: $1
-			return 3;;
-		*)
-			local name="$1"
-			test $(declare -F "$name") = "$name"
-			return;;
-	esac
+  case "$1" in
+    -h|--help)
+      echo 'usage: is_func_declared [-h|--help] NAME'
+      echo ''
+      echo 'Test if function NAME is defined.'
+      echo ''
+      echo 'optional arguments:'
+      echo '  -h, --help     show this help and exit'
+      echo ''
+      echo 'positional arguments:'
+      echo '  NAME    name of a bash function'
+      return 2;;
+    -*)
+      echo is_func_declared: unknown option: $1
+      return 3;;
+    *)
+      local name="$1"
+      test $(declare -F "$name") = "$name"
+      return;;
+  esac
 }
 
 path_pretty ()
 {
-	case "$1" in
-		-h|--help)
-			echo 'usage: path_pretty [-h|--help]'
-			echo ''
-			echo 'Print the value of PATH environment variable, but with each directory on'
-			echo 'a separate line.'
-			echo ''
-			echo 'optional arguments:'
-			echo '  -h, --help     show this help and exit'
-			return 2;;
-	esac
-	echo "$PATH" | sed 's/:/\n/g'
+  case "$1" in
+    -h|--help)
+      echo 'usage: path_pretty [-h|--help]'
+      echo ''
+      echo 'Print the value of PATH environment variable, but with each directory on'
+      echo 'a separate line.'
+      echo ''
+      echo 'optional arguments:'
+      echo '  -h, --help     show this help and exit'
+      return 2;;
+  esac
+  echo "$PATH" | sed 's/:/\n/g'
 }
 
 cdwin ()
 {
-	case "$1" in
-		-h|--help)
-			echo 'usage: cdwin [-h|--help] WINPATH'
-			echo ''
-			echo 'Assuming you run Windows Subsystem for Linux, change current directory'
-			echo 'to a directory where a Windows folder specified by WINPATH is mounted at.'
-			echo ''
-			echo 'positional arguments:'
-			echo "  WINPATH    path of a Windows folder, eg. 'C:\Users\adam\Desktop'"
-			echo '             Enclose it within single quotes. To learn why, execute:'
-			echo '             echo C:\I\dont\quote\properly'
-			echo ''
-			echo 'optional arguments:'
-			echo '  -h, --help     show this help and exit'
-			return 2;;
-	esac
-	local win_path="$1"
-	local unix_path=$(sed -e 's:\\:/:g' -e "s/^\([A-z]\):/\L\1/" -e "s:^:/mnt/:" <<< "$1")
-	cd "$unix_path" \
-		|| echo '[cdwin] Could not go to requested folder.' \
-		        'Did you remember to enclose WINPATH in single quotes?'
+  case "$1" in
+    -h|--help)
+      echo 'usage: cdwin [-h|--help] WINPATH'
+      echo ''
+      echo 'Assuming you run Windows Subsystem for Linux, change current directory'
+      echo 'to a directory where a Windows folder specified by WINPATH is mounted at.'
+      echo ''
+      echo 'positional arguments:'
+      echo "  WINPATH    path of a Windows folder, eg. 'C:\Users\adam\Desktop'"
+      echo '             Enclose it within single quotes. To learn why, execute:'
+      echo '             echo C:\I\dont\quote\properly'
+      echo ''
+      echo 'optional arguments:'
+      echo '  -h, --help     show this help and exit'
+      return 2;;
+  esac
+  local win_path="$1"
+  local unix_path=$(sed -e 's:\\:/:g' -e "s/^\([A-z]\):/\L\1/" -e "s:^:/mnt/:" <<< "$1")
+  cd "$unix_path" \
+    || echo '[cdwin] Could not go to requested folder.' \
+            'Did you remember to enclose WINPATH in single quotes?'
 }
 
