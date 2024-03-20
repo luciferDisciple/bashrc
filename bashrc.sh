@@ -4,6 +4,10 @@
 
 [[ $- != *i* ]] && return
 
+command.is.available() {
+	which "$1" &>/dev/null
+}
+
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -11,7 +15,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 export BC_ENV_ARGS="$HOME/.bc"
 export EDITOR=nvim
-export GEM_HOME="$(ruby -e 'puts Gem.user_dir' || "")"
+export GEM_HOME="$(command.is.available ruby && ruby -e 'puts Gem.user_dir')"
 export GIT_EDITOR=nvim
 
 alias cp="cp -i"                          # confirm before overwriting something
