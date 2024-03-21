@@ -34,4 +34,4 @@ log_info_line() {
   echo "[install.sh] $*"
 }
 
-main && log_info_line "Success!" || log_info_line "Failed!"
+main && log_info_line "Installation succeeded!" || log_info_line "Installation failed!"
