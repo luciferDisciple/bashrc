@@ -1,8 +1,8 @@
 #!/bin/bash
 
 main() {
-  install_file bashrc.sh "$HOME/.bashrc" || return 1
-  install_file inputrc   "$HOME/inputrc" || return 1
+  install_file bashrc.sh "$HOME/.bashrc"  || return 1
+  install_file inputrc   "$HOME/.inputrc" || return 1
 }
 
 install_file() {
