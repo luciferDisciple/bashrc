@@ -444,7 +444,15 @@ timestamp ()
 newest_file () 
 { 
     # doesn't work if newline character is present anywhere
-    local dir="${1%/}"
-    local file_basename="$(ls -t "$1" | head -1)"
-    echo "${dir}/${file_basename}"
+    local dir="${1%/}"  # remove trailing directory separator
+    if [[ -z "$dir" ]]; then
+      local file_basename="$(ls -t | head -1)"
+    else
+      local file_basename="$(ls -t "$dir" | head -1)"
+    fi
+    if [[ -z "$dir" ]]; then
+      echo "${file_basename}"
+    else
+      echo "${dir}/${file_basename}"
+    fi
 }
